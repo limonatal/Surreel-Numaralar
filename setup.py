@@ -18,6 +18,6 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    package= ['Surreal_num'],
+    package= ['Surreel-Numaralar'],
     python_requires='>=3.8',
 )
