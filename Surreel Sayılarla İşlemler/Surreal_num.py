@@ -17,9 +17,9 @@ class Surreal_Converter:
     @staticmethod
     def convert_int(value: int):
         if value == 0:
-            return Surreal_Finite.SurrealZero
+            return sayı.SurrealZero
         elif value == 1:
-            return Surreal_Finite.SurrealOne
+            return sayı.SurrealOne
         elif value > 1:
             return SurrealShort( left=[Surreal_Converter.convert_int(value-1)], right=[], name=str(value))
         else:
@@ -34,7 +34,7 @@ class Ordinal:
         if number:
             self.value = number
         else:
-            self.value = Surreal_Finite.SurrealZero
+            self.value = sayı.SurrealZero
 
     def __repr__(self) -> str:
         return str(self.value)
@@ -62,7 +62,7 @@ class SurrealShort:
         SurrealShort.count += 1
         #x=k/2n  (with k odd and n>0), just let xL=(k−1)/2n and xR=(k+1)/2n
     def convert_to_rat(self):
-        if self==Surreal_Finite.SurrealZero:
+        if self==sayı.SurrealZero:
             return 0
         elif self.right and self.left :
             self.right.sort()
@@ -71,9 +71,9 @@ class SurrealShort:
             v=SurrealShort.convert_to_rat(self.right[0])-SurrealShort.convert_to_rat(self.left[-1])
             if v !=0:
                 if k >= 0:
-                    return abs(math.sqrt(k)+1/(2/v)) if self>Surreal_Finite.SurrealZero else -abs(math.sqrt(k)+1/(2/v))
+                    return abs(math.sqrt(k)+1/(2/v)) if self>sayı.SurrealZero else -abs(math.sqrt(k)+1/(2/v))
                 else:
-                    return abs(math.sqrt(-k)+1/(2/v)) if self >Surreal_Finite.SurrealZero else -abs(math.sqrt(-k)+1/(2/v))
+                    return abs(math.sqrt(-k)+1/(2/v)) if self >sayı.SurrealZero else -abs(math.sqrt(-k)+1/(2/v))
             else:
                 return 0
         elif not self.right:
@@ -106,11 +106,11 @@ class SurrealShort:
         return self+-value
     def __add__(self, y):
         x = self
-        if x == Surreal_Finite.SurrealZero:
+        if x == sayı.SurrealZero:
             result = y
         elif isinstance(y, int):
             result = x + Surreal_Converter.convert_int(y)
-        elif y == Surreal_Finite.SurrealZero:
+        elif y == sayı.SurrealZero:
             result = x
         else:
             p=[x + b for b in y.left]
@@ -134,16 +134,16 @@ class SurrealShort:
         return self
 
     def __mul__(self, value: 'SurrealShort'):
-        if self == Surreal_Finite.SurrealOne:
+        if self == sayı.SurrealOne:
             return value
-        elif value == Surreal_Finite.SurrealOne:
+        elif value == sayı.SurrealOne:
             return self
-        elif self == Surreal_Finite.SurrealMinusOne:
+        elif self == sayı.SurrealMinusOne:
             return -value
-        elif value == Surreal_Finite.SurrealMinusOne:
+        elif value == sayı.SurrealMinusOne:
             return -self
-        elif value == Surreal_Finite.SurrealZero or self == Surreal_Finite.SurrealZero:
-            return Surreal_Finite.SurrealZero
+        elif value == sayı.SurrealZero or self == sayı.SurrealZero:
+            return sayı.SurrealZero
         else:
         #return SurrealShort((self.left*value+self*value.left+-self.left*value.left, self.right*value+self*value.right+self*value.right+-self.right*value.right), (self.left*value+self*value.right+-self.left*value.right, self.right*value+self*value.left+-self.right*value.left))
             return SurrealShort([a*value+self*c-a*c for a in self.left for c in value.left]+[b*value+self*d+self*d-b*d for b in self.right for d in value.right],[a*value+self*d-a*d for a in self.left for d in value.right]+[b*value+self*c-b*c for b in self.right for c in value.left])
@@ -197,7 +197,7 @@ class SurrealShort:
 
     def __ge__(self,y):
         return not(self < y)
-class Surreal_Finite:
+class sayı:
     ϕ = []
     SurrealZero = SurrealShort( ϕ, ϕ,"0")
     SurrealOne = SurrealShort( [SurrealZero], ϕ, "0")
@@ -213,10 +213,10 @@ class Surreal_Finite:
 
 class Generator:
     days= {
-        0 : [Surreal_Finite.SurrealZero]
+        0 : [sayı.SurrealZero]
     }
     üsr_days={
-        0 : [Surreal_Finite.SurrealZero]
+        0 : [sayı.SurrealZero]
     }
     edges = []
     @staticmethod
@@ -233,12 +233,12 @@ class Generator:
 
 
 
-                nodes.append((str(Surreal_Finite.SurrealZero),str(l) ) )
+                nodes.append((str(sayı.SurrealZero),str(l) ) )
                 l.convert_to_rat()
                 Generator.days[d+1].append(l)
 
 
-                nodes.append((str(Surreal_Finite.SurrealZero),str(r) ) )
+                nodes.append((str(sayı.SurrealZero),str(r) ) )
                 r.convert_to_rat()
                 Generator.days[d+1].append(r)
 
@@ -303,39 +303,39 @@ class Generator:
             return Generator.days
 
 
-#print( Surreal_Converter.convert(-2) <= Surreal_Finite.SurrealMinusTwo )
-#print( Surreal_Converter.convert(-1) ==  Surreal_Finite.SurrealMinusOne )
-#print( Surreal_Finite.SurrealMinusOne  ==  Surreal_Finite.SurrealTwo )
-#print( Surreal_Converter.convert(1) <= Surreal_Finite.SurrealTwo )
-#print( Surreal_Converter.convert(1) >= Surreal_Finite.SurrealTwo )
-#print( SurrealShort() <= Surreal_Finite.SurrealZero )
+#print( Surreal_Converter.convert(-2) <= sayı.SurrealMinusTwo )
+#print( Surreal_Converter.convert(-1) ==  sayı.SurrealMinusOne )
+#print( sayı.SurrealMinusOne  ==  sayı.SurrealTwo )
+#print( Surreal_Converter.convert(1) <= sayı.SurrealTwo )
+#print( Surreal_Converter.convert(1) >= sayı.SurrealTwo )
+#print( SurrealShort() <= sayı.SurrealZero )
 #x = Surreal_Converter.convert(-2)
-#y = Surreal_Finite.SurrealMinusTwo
+#y = sayı.SurrealMinusTwo
 #print(x.left,x.right)
 #print(y.left,y.right)
-#print(SurrealShort("1", [Surreal_Finite.SurrealTwo], [Surreal_Finite.SurrealMinusOne]).is_valid())
+#print(SurrealShort("1", [sayı.SurrealTwo], [sayı.SurrealMinusOne]).is_valid())
 #print(Generator.generate_day(4))
 #print( Surreal_Converter.convert(1).convert_to_rat())
-#print( Surreal_Finite.SurrealTwo.convert_to_rat())
-#print( Surreal_Finite.SurrealMinusOneHalf.convert_to_rat(), Surreal_Finite.SurrealMinusOne.convert_to_rat())
-#print( Surreal_Finite.SurrealOneHalf.convert_to_rat())
-#print( Surreal_Finite.Üsreel.is_valid())
-#print( Surreal_Finite.Üsreel + Surreal_Finite.MinÜsreel)
-#print(Surreal_Finite.SurrealTwo*Surreal_Finite.SurrealOne)
+#print( sayı.SurrealTwo.convert_to_rat())
+#print( sayı.SurrealMinusOneHalf.convert_to_rat(), sayı.SurrealMinusOne.convert_to_rat())
+#print( sayı.SurrealOneHalf.convert_to_rat())
+#print( sayı.Üsreel.is_valid())
+#print( sayı.Üsreel + sayı.MinÜsreel)
+#print(sayı.SurrealTwo*sayı.SurrealOne)
 #print(Generator.üsr_day())
 #print(Generator.generate_day(3))
-#print(Surreal_Finite.Üsreel*Surreal_Finite.MinÜsreel)
-#print(Surreal_Finite.SurrealOne*Surreal_Finite.SurrealTwo)
-#print(Surreal_Finite.Üsreel+Surreal_Finite.MinÜsreel)
-#print(Surreal_Finite.SurrealMinusOne*Surreal_Finite.SurrealOne)
+#print(sayı.Üsreel*sayı.MinÜsreel)
+#print(sayı.SurrealOne*sayı.SurrealTwo)
+#print(sayı.Üsreel+sayı.MinÜsreel)
+#print(sayı.SurrealMinusOne*sayı.SurrealOne)
 #x = Surreal_Converter.convert(1)
-#y = Surreal_Finite.SurrealThree
+#y = sayı.SurrealThree
 #x+=5
 #print(x)
 #x.shorten()
 #print(x)
 #print(x.convert_to_rat())
-#b=Surreal_Finite.SurrealMinusOneHalf+Surreal_Finite.SurrealMinusOne
+#b=sayı.SurrealMinusOneHalf+sayı.SurrealMinusOne
 #b.left
 #print(b.left[0])
 ""
